@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyloBarber - Curso de Barbería</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .chat-bg {
+      background-image: url('https://i.ibb.co/DPnftH9X/844fc286d4c8052cf4147c75f9343968.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .typing-indicator span {
+      animation: blink 1.4s infinite both;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: .2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink {
+      0% { opacity: .2; }
+      20% { opacity: 1; }
+      100% { opacity: .2; }
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white font-sans h-screen flex flex-col justify-between antialiased">
+
+  <!-- Header del Chat -->
+  <header class="p-3 bg-zinc-900/90 backdrop-blur border-b border-zinc-800 flex items-center justify-between sticky top-0 z-10">
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <img src="https://i.ibb.co/VWLc5v9b/8a36c1fe02df62cdad2e70dff2f6e43e-1.jpg" alt="StyloBarber" class="w-11 h-11 rounded-full object-cover border-2 border-amber-500">
+        <span class="w-3 h-3 bg-emerald-500 rounded-full absolute bottom-0 right-0 border-2 border-zinc-900"></span>
+      </div>
+      <div>
+        <h1 class="font-bold text-base leading-tight">StyloBarber</h1>
+        <p class="text-xs text-amber-400 flex items-center gap-1">
+          <i class="fa-solid fa-circle-check text-[10px]"></i> Academia & Comunidad
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Área Principal del Chat -->
+  <main class="flex-1 chat-bg overflow-y-auto p-4 space-y-4 relative">
+    <div id="chat-container" class="max-w-md mx-auto space-y-4 pb-6">
+    </div>
+  </main>
+
+  <!-- Status Bar -->
+  <footer id="footer-status" class="p-3 bg-zinc-900/90 border-t border-zinc-800 text-center text-xs text-zinc-400">
+    <span id="status-text">StyloBarber está escribiendo...</span>
+  </footer>
+
+  <script>
+    const chatContainer = document.getElementById('chat-container');
+    const statusText = document.getElementById('status-text');
+
+    const linkCurso = "https://drive.google.com/drive/folders/1Gi-zj5seJFQgwvj6xCNjDrt_AndKOdsm";
+    const linkPDF = "https://drive.google.com/file/d/1MXum-vBxOgEW27G1m1b2GvJy15R0yvkz/view?usp=drivesdk";
+
+    // Configuración Telegram
+    const TELEGRAM_TOKEN = "8829825764:AAHUpW5txlSxLvtExh3zvzRet1v28iwLZ80";
+    const TELEGRAM_CHAT_ID = "7951954749";
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    async function showTyping() {
+      statusText.innerText = "StyloBarber está escribiendo...";
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typing-node';
+      typingDiv.className = 'flex items-center gap-2 max-w-[75%] p-3 rounded-2xl bg-zinc-900/90 text-zinc-300 border border-zinc-800 rounded-tl-none self-start';
+      typingDiv.innerHTML = `<div class="typing-indicator flex gap-1"><span class="w-2 h-2 bg-amber-500 rounded-full"></span><span class="w-2 h-2 bg-amber-500 rounded-full"></span><span class="w-2 h-2 bg-amber-500 rounded-full"></span></div>`;
+      chatContainer.appendChild(typingDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function hideTyping() {
+      const node = document.getElementById('typing-node');
+      if (node) node.remove();
+      statusText.innerText = "En línea";
+    }
+
+    async function addBotMessage(htmlContent) {
+      await showTyping();
+      await sleep(1200);
+      hideTyping();
+
+      const msg = document.createElement('div');
+      msg.className = 'max-w-[85%] p-4 rounded-2xl bg-zinc-900/90 backdrop-blur text-zinc-100 border border-zinc-800/80 rounded-tl-none shadow-xl space-y-2';
+      msg.innerHTML = htmlContent;
+      chatContainer.appendChild(msg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    async function addUserMessage(text) {
+      const msg = document.createElement('div');
+      msg.className = 'max-w-[80%] p-3 rounded-2xl bg-amber-500 text-zinc-950 font-medium rounded-tr-none ml-auto shadow-md text-sm';
+      msg.innerText = text;
+      chatContainer.appendChild(msg);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    async function initChat() {
+      await addBotMessage("¡Hola! Te doy la bienvenida a <b>StyloBarber</b>. 💈✂️");
+      await addBotMessage("Mi meta es ayudar a la mayor cantidad de personas a dominar el arte de la barbería, sin importar su nivel de experiencia.");
+      await showSurvey();
+    }
+
+    async function showSurvey() {
+      await showTyping();
+      await sleep(1000);
+      hideTyping();
+
+      const surveyDiv = document.createElement('div');
+      surveyDiv.id = 'survey-box';
+      surveyDiv.className = 'max-w-[85%] p-4 rounded-2xl bg-zinc-900/90 backdrop-blur text-zinc-100 border border-zinc-800 rounded-tl-none shadow-xl space-y-3';
+      surveyDiv.innerHTML = `
+        <p class="font-semibold text-amber-400">Para adaptar la experiencia, cuéntame: ¿Cuál es tu nivel actual?</p>
+        <div class="flex flex-col gap-2">
+          <button onclick="handleOption('Soy barbero profesional')" class="w-full text-left p-2.5 rounded-xl bg-zinc-800 hover:bg-amber-500 hover:text-black transition border border-zinc-700 text-xs font-medium">💈 Ya soy barbero (quiero perfeccionar)</button>
+          <button onclick="handleOption('Estoy iniciando')" class="w-full text-left p-2.5 rounded-xl bg-zinc-800 hover:bg-amber-500 hover:text-black transition border border-zinc-700 text-xs font-medium">✂️ Estoy iniciando en la barbería</button>
+          <button onclick="handleOption('Quiero aprender desde cero')" class="w-full text-left p-2.5 rounded-xl bg-zinc-800 hover:bg-amber-500 hover:text-black transition border border-zinc-700 text-xs font-medium">🚀 Quiero aprender desde cero</button>
+        </div>
+      `;
+      chatContainer.appendChild(surveyDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    async function handleOption(optionText) {
+      const surveyBox = document.getElementById('survey-box');
+      if (surveyBox) surveyBox.remove();
+
+      await addUserMessage(optionText);
+
+      await addBotMessage("¡Excelente! Este material está preparado para todo tipo de personas, desde nivel 0 hasta nivel profesional. ¡Aprovéchalo al máximo! 🔥");
+
+      // Entrega de Enlaces
+      await addBotMessage(`
+        <div class="space-y-3">
+          <p class="font-bold text-amber-400 text-base">🎁 Aquí tienes tus Recursos Gratuitos:</p>
+          
+          <div class="bg-zinc-800/80 p-3 rounded-xl border border-zinc-700">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">🎬</div>
+              <div>
+                <h4 class="font-bold text-sm text-white">Curso Completo en Video</h4>
+                <p class="text-[11px] text-zinc-400">Carpeta en Google Drive</p>
+              </div>
+            </div>
+            <a href="${linkCurso}" target="_blank" class="block w-full text-center bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2 rounded-lg text-xs transition">
+              <i class="fa-solid fa-folder-open mr-1"></i> Abrir Curso Gratis
+            </a>
+          </div>
+
+          <div class="bg-zinc-800/80 p-3 rounded-xl border border-zinc-700">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xl">📄</div>
+              <div>
+                <h4 class="font-bold text-sm text-white">Manual Barbería 0 a Experto</h4>
+                <p class="text-[11px] text-zinc-400">Guía en formato PDF</p>
+              </div>
+            </div>
+            <a href="${linkPDF}" target="_blank" class="block w-full text-center bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 rounded-lg text-xs transition">
+              <i class="fa-solid fa-file-pdf mr-1"></i> Descargar Guía PDF
+            </a>
+          </div>
+        </div>
+      `);
+
+      // Instrucción de cómo guardar en Google Drive
+      await addBotMessage(`
+        <div class="text-xs space-y-2">
+          <p class="font-semibold text-amber-400"><i class="fa-solid fa-circle-info"></i> ¿Cómo guardar el curso en tu teléfono?</p>
+          <p class="text-zinc-300">Al abrir el enlace de Google Drive, toca el ícono de los tres puntos <i class="fa-solid fa-ellipsis-vertical"></i> y selecciona <b>"Añadir acceso directo a Drive"</b>. Así no perderás el acceso nunca.</p>
+        </div>
+      `);
+
+      // Sección de Pagos y Aportes
+      await addBotMessage(`
+        <div class="space-y-3">
+          <p class="text-sm font-bold text-amber-400"> Tu apoyo nos ayuda a crecer</p>
+          <p class="text-xs text-zinc-300 leading-relaxed">
+            Este proyecto se sostiene gracias al apoyo de la comunidad. Si el contenido te aporta valor y deseas colaborar, puedes hacer tu aporte voluntario con la cantidad que tú desees:
+          </p>
+
+          <!-- Datos de Pago -->
+          <div class="bg-zinc-800/90 p-3 rounded-xl border border-zinc-700 text-xs space-y-2">
+            <div>
+              <p class="text-amber-400 font-bold">🇻🇪 Pago Móvil (Bs):</p>
+              <p class="text-zinc-300">• <b>Banco:</b> 0102 - Banco de Venezuela</p>
+              <p class="text-zinc-300">• <b>Cédula:</b> V-27.636.123</p>
+              <p class="text-zinc-300">• <b>Teléfono:</b> 0424-5367825</p>
+              <p class="text-[11px] text-amber-300 mt-1 font-semibold">Montos sugeridos: 800 Bs | 1,200 Bs | 2,000 Bs (o lo que desees aportar)</p>
+            </div>
+            <hr class="border-zinc-700">
+            <div>
+              <p class="text-amber-400 font-bold">🇺🇸 Métodos en USD:</p>
+              <p class="text-zinc-300">• <b>PayPal:</b> manoogul56@gmail.com</p>
+              <p class="text-zinc-300">• <b>Binance:</b> josuelugaliz7@gmail.com</p>
+            </div>
+          </div>
+
+          <!-- Formulario para notificar pago -->
+          <div id="payment-form-box" class="bg-zinc-800/90 p-3.5 rounded-xl border border-amber-500/40 space-y-2.5">
+            <p class="text-xs font-bold text-white text-center"> REGISTRA TU APORTE AQUÍ</p>
+
+            <input type="text" id="user-name" placeholder="Tu Nombre completo" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="user-amount" placeholder="Monto aportado (Ej: 500 Bs o 10 $)" class="bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+              <select id="user-method" class="bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+                <option value="Pago Móvil">Pago Móvil</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Binance">Binance</option>
+              </select>
+            </div>
+
+            <input type="text" id="user-ref" placeholder="N° de Referencia (opcional)" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+
+            <button onclick="sendContribution()" class="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-lg text-xs transition shadow-lg flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Notificar mi Aporte
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    // Envío del Aporte directo a Telegram
+    async function sendContribution() {
+      const name = document.getElementById('user-name').value.trim();
+      const amount = document.getElementById('user-amount').value.trim();
+      const method = document.getElementById('user-method').value;
+      const ref = document.getElementById('user-ref').value.trim() || 'No especificada';
+
+      if (!name || !amount) {
+        alert("Por favor ingresa tu nombre y el monto aportado.");
+        return;
+      }
+
+      const formBox = document.getElementById('payment-form-box');
+      formBox.innerHTML = `<p class="text-center text-xs text-amber-400 py-3"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando notificación...</p>`;
+
+      const messageText = `💈 *NUEVO APORTE RECIBIDO - STYLOBARBER*\n\n👤 *Nombre:* ${name}\n💰 *Monto:* ${amount}\n💳 *Método:* ${method}\n🧾 *Referencia:* ${ref}`;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: messageText,
+            parse_mode: 'Markdown'
+          })
+        });
+
+        await addUserMessage(`Aporte notificado por ${name}: ${amount} (${method})`);
+        await addBotMessage(`¡Muchas gracias <b>${name}</b> por tu apoyo! 💈🔥 Tu contribución de <b>${amount}</b> ayuda a mantener este proyecto activo y seguir ayudando a más barberos.`);
+      } catch (err) {
+        await addBotMessage("¡Gracias por tu apoyo! Tu mensaje ha sido procesado.");
+      }
+    }
+
+    window.onload = initChat;
+  </script>
+</body>
+</html>
+
