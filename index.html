@@ -27,7 +27,6 @@
 </head>
 <body class="bg-zinc-950 text-white font-sans h-screen flex flex-col justify-between antialiased">
 
-  <!-- Header del Chat -->
   <header class="p-3 bg-zinc-900/90 backdrop-blur border-b border-zinc-800 flex items-center justify-between sticky top-0 z-10">
     <div class="flex items-center gap-3">
       <div class="relative">
@@ -43,13 +42,11 @@
     </div>
   </header>
 
-  <!-- Área Principal del Chat -->
   <main class="flex-1 chat-bg overflow-y-auto p-4 space-y-4 relative">
     <div id="chat-container" class="max-w-md mx-auto space-y-4 pb-6">
     </div>
   </main>
 
-  <!-- Status Bar -->
   <footer id="footer-status" class="p-3 bg-zinc-900/90 border-t border-zinc-800 text-center text-xs text-zinc-400">
     <span id="status-text">StyloBarber está escribiendo...</span>
   </footer>
@@ -57,9 +54,6 @@
   <script>
     const chatContainer = document.getElementById('chat-container');
     const statusText = document.getElementById('status-text');
-
-    const linkCurso = "https://drive.google.com/drive/folders/1Gi-zj5seJFQgwvj6xCNjDrt_AndKOdsm";
-    const linkPDF = "https://drive.google.com/file/d/1MXum-vBxOgEW27G1m1b2GvJy15R0yvkz/view?usp=drivesdk";
 
     // Configuración Telegram
     const TELEGRAM_TOKEN = "8829825764:AAHUpW5txlSxLvtExh3zvzRet1v28iwLZ80";
@@ -105,7 +99,7 @@
 
     async function initChat() {
       await addBotMessage("¡Hola! Te doy la bienvenida a <b>StyloBarber</b>. 💈✂️");
-      await addBotMessage("Mi meta es ayudar a la mayor cantidad de personas a dominar el arte de la barbería, sin importar su nivel de experiencia.");
+      await addBotMessage("Mi meta es ayudarte a dominar el arte de la barbería con nuestro material especializado.");
       await showSurvey();
     }
 
@@ -135,65 +129,48 @@
 
       await addUserMessage(optionText);
 
-      await addBotMessage("¡Excelente! Este material está preparado para todo tipo de personas, desde nivel 0 hasta nivel profesional. ¡Aprovéchalo al máximo! 🔥");
+      await addBotMessage("¡Excelente! Tenemos dos opciones de formación preparadas para ti:");
 
-      // Entrega de Enlaces
+      // Selección de Producto / Paquetes
       await addBotMessage(`
         <div class="space-y-3">
-          <p class="font-bold text-amber-400 text-base">🎁 Aquí tienes tus Recursos Gratuitos:</p>
+          <p class="font-bold text-amber-400 text-base">📚 Selecciona tu Plan de Capacitación:</p>
           
-          <div class="bg-zinc-800/80 p-3 rounded-xl border border-zinc-700">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">🎬</div>
+          <div class="bg-zinc-800/80 p-3.5 rounded-xl border border-amber-500/50 space-y-2">
+            <div class="flex justify-between items-start">
               <div>
-                <h4 class="font-bold text-sm text-white">Curso Completo en Video</h4>
-                <p class="text-[11px] text-zinc-400">Carpeta en Google Drive</p>
+                <h4 class="font-bold text-sm text-white">🎬 Curso Completo + Manual PDF</h4>
+                <p class="text-[11px] text-zinc-400">Acceso ilimitado en Google Drive</p>
               </div>
+              <span class="bg-amber-500 text-zinc-950 font-bold px-2 py-1 rounded text-xs">1,000 Bs</span>
             </div>
-            <a href="${linkCurso}" target="_blank" class="block w-full text-center bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2 rounded-lg text-xs transition">
-              <i class="fa-solid fa-folder-open mr-1"></i> Abrir Curso Gratis
-            </a>
           </div>
 
-          <div class="bg-zinc-800/80 p-3 rounded-xl border border-zinc-700">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xl">📄</div>
+          <div class="bg-zinc-800/80 p-3.5 rounded-xl border border-zinc-700 space-y-2">
+            <div class="flex justify-between items-start">
               <div>
-                <h4 class="font-bold text-sm text-white">Manual Barbería 0 a Experto</h4>
-                <p class="text-[11px] text-zinc-400">Guía en formato PDF</p>
+                <h4 class="font-bold text-sm text-white">📄 Solo Manual Barbería 0 a Experto</h4>
+                <p class="text-[11px] text-zinc-400">Guía completa en formato PDF</p>
               </div>
+              <span class="bg-zinc-700 text-amber-400 font-bold px-2 py-1 rounded text-xs">600 Bs</span>
             </div>
-            <a href="${linkPDF}" target="_blank" class="block w-full text-center bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-2 rounded-lg text-xs transition">
-              <i class="fa-solid fa-file-pdf mr-1"></i> Descargar Guía PDF
-            </a>
           </div>
         </div>
       `);
 
-      // Instrucción de cómo guardar en Google Drive
-      await addBotMessage(`
-        <div class="text-xs space-y-2">
-          <p class="font-semibold text-amber-400"><i class="fa-solid fa-circle-info"></i> ¿Cómo guardar el curso en tu teléfono?</p>
-          <p class="text-zinc-300">Al abrir el enlace de Google Drive, toca el ícono de los tres puntos <i class="fa-solid fa-ellipsis-vertical"></i> y selecciona <b>"Añadir acceso directo a Drive"</b>. Así no perderás el acceso nunca.</p>
-        </div>
-      `);
-
-      // Sección de Pagos y Aportes
+      // Datos de Pago y Formulario de Confirmación
       await addBotMessage(`
         <div class="space-y-3">
-          <p class="text-sm font-bold text-amber-400"> Tu apoyo nos ayuda a crecer</p>
-          <p class="text-xs text-zinc-300 leading-relaxed">
-            Este proyecto se sostiene gracias al apoyo de la comunidad. Si el contenido te aporta valor y deseas colaborar, puedes hacer tu aporte voluntario con la cantidad que tú desees:
+          <p class="text-xs text-zinc-300 leading-relaxed font-semibold text-amber-400">
+            💳 Realiza tu pago mediante cualquiera de nuestros canales oficiales:
           </p>
 
-          <!-- Datos de Pago -->
           <div class="bg-zinc-800/90 p-3 rounded-xl border border-zinc-700 text-xs space-y-2">
             <div>
               <p class="text-amber-400 font-bold">🇻🇪 Pago Móvil (Bs):</p>
               <p class="text-zinc-300">• <b>Banco:</b> 0102 - Banco de Venezuela</p>
               <p class="text-zinc-300">• <b>Cédula:</b> V-27.636.123</p>
               <p class="text-zinc-300">• <b>Teléfono:</b> 0424-5367825</p>
-              <p class="text-[11px] text-amber-300 mt-1 font-semibold">Montos sugeridos: 800 Bs | 1,200 Bs | 2,000 Bs (o lo que desees aportar)</p>
             </div>
             <hr class="border-zinc-700">
             <div>
@@ -203,14 +180,23 @@
             </div>
           </div>
 
-          <!-- Formulario para notificar pago -->
           <div id="payment-form-box" class="bg-zinc-800/90 p-3.5 rounded-xl border border-amber-500/40 space-y-2.5">
-            <p class="text-xs font-bold text-white text-center"> REGISTRA TU APORTE AQUÍ</p>
+            <p class="text-xs font-bold text-white text-center">📝 FORMULARIO DE REPORTE DE PAGO</p>
+
+            <div>
+              <label class="text-[10px] text-zinc-400">Plan a adquirir:</label>
+              <select id="user-plan" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+                <option value="Curso Completo + PDF (1000 Bs)">Curso Completo + PDF — 1,000 Bs</option>
+                <option value="Solo Manual PDF (600 Bs)">Solo Manual PDF — 600 Bs</option>
+              </select>
+            </div>
 
             <input type="text" id="user-name" placeholder="Tu Nombre completo" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+
+            <input type="email" id="user-email" placeholder="Tu Correo electrónico" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
             
             <div class="grid grid-cols-2 gap-2">
-              <input type="text" id="user-amount" placeholder="Monto aportado (Ej: 500 Bs o 10 $)" class="bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+              <input type="text" id="user-amount" placeholder="Monto transferido" class="bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
               <select id="user-method" class="bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
                 <option value="Pago Móvil">Pago Móvil</option>
                 <option value="PayPal">PayPal</option>
@@ -218,32 +204,80 @@
               </select>
             </div>
 
-            <input type="text" id="user-ref" placeholder="N° de Referencia (opcional)" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
+            <input type="text" id="user-ref" placeholder="N° de Referencia de pago" class="w-full bg-zinc-900 border border-zinc-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-amber-500">
 
-            <button onclick="sendContribution()" class="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-lg text-xs transition shadow-lg flex items-center justify-center gap-2">
-              <i class="fa-solid fa-paper-plane"></i> Notificar mi Aporte
+            <div id="error-message" class="text-[11px] text-red-400 hidden font-medium text-center"></div>
+
+            <button onclick="validateAndReview()" class="w-full bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2.5 rounded-lg text-xs transition shadow-lg flex items-center justify-center gap-2">
+              <i class="fa-solid fa-magnifying-glass"></i> Verificar y Continuar
             </button>
           </div>
         </div>
       `);
     }
 
-    // Envío del Aporte directo a Telegram
-    async function sendContribution() {
+    // Validación de campos antes de enviar
+    function validateAndReview() {
+      const plan = document.getElementById('user-plan').value;
       const name = document.getElementById('user-name').value.trim();
+      const email = document.getElementById('user-email').value.trim();
       const amount = document.getElementById('user-amount').value.trim();
       const method = document.getElementById('user-method').value;
-      const ref = document.getElementById('user-ref').value.trim() || 'No especificada';
+      const ref = document.getElementById('user-ref').value.trim();
+      const errorDiv = document.getElementById('error-message');
 
-      if (!name || !amount) {
-        alert("Por favor ingresa tu nombre y el monto aportado.");
+      errorDiv.classList.add('hidden');
+
+      if (!name || !email || !amount || !ref) {
+        errorDiv.innerText = "⚠️ Por favor, completa todos los campos del formulario.";
+        errorDiv.classList.remove('hidden');
         return;
       }
 
-      const formBox = document.getElementById('payment-form-box');
-      formBox.innerHTML = `<p class="text-center text-xs text-amber-400 py-3"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando notificación...</p>`;
+      // Validación básica de formato de correo
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errorDiv.innerText = "⚠️ Ingresa un correo electrónico válido.";
+        errorDiv.classList.remove('hidden');
+        return;
+      }
 
-      const messageText = `💈 *NUEVO APORTE RECIBIDO - STYLOBARBER*\n\n👤 *Nombre:* ${name}\n💰 *Monto:* ${amount}\n💳 *Método:* ${method}\n🧾 *Referencia:* ${ref}`;
+      // Validación de longitud de referencia
+      if (ref.length < 4) {
+        errorDiv.innerText = "⚠️ El número de referencia debe tener al menos 4 dígitos.";
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      // Reemplaza el formulario por una vista previa de confirmación
+      const formBox = document.getElementById('payment-form-box');
+      formBox.innerHTML = `
+        <div class="space-y-2 text-xs">
+          <p class="font-bold text-amber-400 text-center">🔍 Confirmación de Datos</p>
+          <p class="text-zinc-300">Por favor, verifica que la información sea correcta antes de enviar:</p>
+          <div class="bg-zinc-900/90 p-2.5 rounded-lg space-y-1 text-zinc-200 border border-zinc-700">
+            <p>• <b>Plan:</b> ${plan}</p>
+            <p>• <b>Nombre:</b> ${name}</p>
+            <p>• <b>Correo:</b> ${email}</p>
+            <p>• <b>Monto:</b> ${amount}</p>
+            <p>• <b>Método:</b> ${method}</p>
+            <p>• <b>Referencia:</b> ${ref}</p>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="sendOrder('${plan}', '${name}', '${email}', '${amount}', '${method}', '${ref}')" class="flex-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold py-2 rounded-lg text-xs transition">
+              <i class="fa-solid fa-paper-plane mr-1"></i> Confirmar y Enviar
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Envío final de la Orden directo a Telegram
+    async function sendOrder(plan, name, email, amount, method, ref) {
+      const formBox = document.getElementById('payment-form-box');
+      formBox.innerHTML = `<p class="text-center text-xs text-amber-400 py-3"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Notificando pago a Telegram...</p>`;
+
+      const messageText = `🛒 *NUEVA COMPRA - STYLOBARBER*\n\n📦 *Plan:* ${plan}\n👤 *Nombre:* ${name}\n📧 *Correo:* ${email}\n💰 *Monto:* ${amount}\n💳 *Método:* ${method}\n🧾 *Referencia:* ${ref}`;
 
       try {
         await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
@@ -256,10 +290,10 @@
           })
         });
 
-        await addUserMessage(`Aporte notificado por ${name}: ${amount} (${method})`);
-        await addBotMessage(`¡Muchas gracias <b>${name}</b> por tu apoyo! 💈🔥 Tu contribución de <b>${amount}</b> ayuda a mantener este proyecto activo y seguir ayudando a más barberos.`);
+        await addUserMessage(`Pago reportado: ${plan} - Ref: ${ref}`);
+        await addBotMessage(`¡Muchas gracias <b>${name}</b>! 🎉<br><br>Hemos recibido tu reporte de pago. Verificaremos la transferencia y te enviaremos el enlace de acceso al correo: <b>${email}</b> en breve.`);
       } catch (err) {
-        await addBotMessage("¡Gracias por tu apoyo! Tu mensaje ha sido procesado.");
+        await addBotMessage("Hubo un detalle técnico al enviar la información. Descuida, guardaremos tu reporte y nos comunicaremos al correo especificado.");
       }
     }
 
@@ -267,4 +301,3 @@
   </script>
 </body>
 </html>
-
